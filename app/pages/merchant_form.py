@@ -2,7 +2,7 @@ import sys
 import os
 from datetime import datetime
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 import streamlit as st
 from services.sheets_client import log_transaction, validate_merchant, validate_guest
