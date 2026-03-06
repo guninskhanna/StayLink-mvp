@@ -4,6 +4,8 @@ st.set_page_config(layout="centered")
 
 hide_streamlit_style = """
 <style>
+[data-testid="stSidebar"] {display: none;}
+[data-testid="collapsedControl"] {display: none;}
 
 /* Hide hamburger menu */
 #MainMenu {visibility: hidden;}
