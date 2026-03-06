@@ -2,6 +2,17 @@ import streamlit as st
 import qrcode
 from io import BytesIO
 
+st.set_page_config(layout="centered")
+
+hide_streamlit_style = """
+<style>
+[data-testid="stSidebar"] {display: none;}
+[data-testid="collapsedControl"] {display: none;}
+</style>
+"""
+
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 st.set_page_config(page_title="StayLink Guest QR")
 
 st.title("Guest Charge QR")

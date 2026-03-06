@@ -2,6 +2,17 @@ import sys
 import os
 from datetime import datetime
 
+st.set_page_config(layout="centered")
+
+hide_streamlit_style = """
+<style>
+[data-testid="stSidebar"] {display: none;}
+[data-testid="collapsedControl"] {display: none;}
+</style>
+"""
+
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 import streamlit as st
