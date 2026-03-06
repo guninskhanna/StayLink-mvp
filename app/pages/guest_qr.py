@@ -1,6 +1,7 @@
 import streamlit as st
 import qrcode
 from io import BytesIO
+from services.sheets_client import validate_guest
 
 st.set_page_config(layout="centered")
 
@@ -39,20 +40,45 @@ st.set_page_config(page_title="StayLink Guest QR")
 st.title("Guest Charge QR")
 
 # Read token from URL
+
 token = st.query_params.get("token")
 
 if not token:
-    st.error("Invalid guest link.")
+    st.error("Invalid access link.")
     st.stop()
 
-merchant_url = f"http://localhost:8501/merchant?token={token}"
+valid, guest_result = validate_guest(token)
+
+if not valid:
+    st.error("This guest link is no longer active.")
+    st.stop()
+
+guest_name = guest_result["guest_name"]
+room = guest_result["room"]
+
+st.title("StayLink")
+st.caption(f"Guest: {guest_name} | Room: {room}")
+
+merchant_url = f"https://staylink-mvp.streamlit.app/merchant_form?token={token}"
 
 qr = qrcode.make(merchant_url)
 
 buffer = BytesIO()
 qr.save(buffer, format="PNG")
 
-st.image(buffer.getvalue(), caption="Show this QR code to the merchant", width=450)
+col1, col2, col3 = st.columns([1,2,1])
 
+with col2:
+    st.image(buffer.getvalue(), use_container_width=True)
 
-st.info("The merchant will scan this QR code to charge your purchase to your room.")
+st.markdown(
+    """
+    <div style="text-align:center; margin-top:20px;">
+    Show this QR code to the merchant to charge purchases to your room.
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+st.caption("Valid for the duration of your stay.")
+st.info("Show this QR code to the merchant to charge purchases to your room.")
