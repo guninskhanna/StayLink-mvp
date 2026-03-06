@@ -56,7 +56,6 @@ if not valid:
 guest_name = guest_result["guest_name"]
 room = guest_result["room"]
 
-st.title("StayLink")
 st.caption(f"Guest: {guest_name} | Room: {room}")
 
 merchant_url = f"https://staylink-mvp.streamlit.app/merchant_form?token={token}"
@@ -70,15 +69,6 @@ col1, col2, col3 = st.columns([1,2,1])
 
 with col2:
     st.image(buffer.getvalue(), use_container_width=True)
-
-st.markdown(
-    """
-    <div style="text-align:center; margin-top:20px;">
-    Show this QR code to the merchant to charge purchases to your room.
-    </div>
-    """,
-    unsafe_allow_html=True
-)
 
 st.caption("Valid for the duration of your stay.")
 st.info("Show this QR code to the merchant to charge purchases to your room.")
