@@ -55,7 +55,16 @@ if not token:
     st.error("Invalid QR code.")
     st.stop()
 
-st.success("Guest verified")
+valid_guest, guest_result = validate_guest(token)
+
+if not valid_guest:
+    st.error("Invalid or expired guest link.")
+    st.stop()
+
+guest_name = guest_result["guest_name"]
+room = guest_result["room"]
+
+st.success(f"Guest verified: {guest_name} (Room {room})")
 
 st.write("Enter charge details")
 
@@ -72,11 +81,6 @@ receipt_link = ""
 submit = st.button("Submit Charge")
 
 if submit:
-
-    valid_guest, guest_result = validate_guest(token)
-    if not valid_guest:
-        st.error(guest_result)
-        st.stop()
 
     if receipt:
         filename = f"{datetime.utcnow().timestamp()}_{receipt.name}"
