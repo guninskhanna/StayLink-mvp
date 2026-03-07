@@ -11,9 +11,9 @@ import boto3
 def get_s3_client():
     return boto3.client(
         "s3",
-        aws_access_key_id=st.secrets["AWS_ACCESS_KEY_ID"],
-        aws_secret_access_key=st.secrets["AWS_SECRET_ACCESS_KEY"],
-        region_name=st.secrets["AWS_REGION"]
+        aws_access_key_id=st.secrets["aws"]["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=st.secrets["aws"]["AWS_SECRET_ACCESS_KEY"],
+        region_name=st.secrets["aws"]["AWS_REGION"]
     )
 
 
@@ -94,7 +94,7 @@ def upload_receipt(file, filename):
 
     s3 = get_s3_client()
 
-    bucket = st.secrets.get("AWS_BUCKET")
+    bucket = st.secrets["aws"]["AWS_BUCKET"]
     key = f"receipts/{filename}"
 
     s3.upload_fileobj(
