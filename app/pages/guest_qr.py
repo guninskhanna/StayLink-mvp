@@ -1,6 +1,10 @@
 import streamlit as st
 import qrcode
 from io import BytesIO
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from services.sheets_client import validate_guest
 
 st.set_page_config(layout="centered")
