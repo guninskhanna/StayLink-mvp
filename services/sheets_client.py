@@ -84,9 +84,13 @@ def upload_receipt(file, filename):
 
     folder_id = "15vTs0Lgqk8EYRfJ4-Tu8WgzZN4IzBXbl"
 
-    file_stream = io.BytesIO(file.getbuffer())
+    file_stream = io.BytesIO(file.read())
 
-    media = MediaIoBaseUpload(file_stream, mimetype=file.type)
+    media = MediaIoBaseUpload(
+        file_stream,
+        mimetype=file.type,
+        resumable=False
+    )
 
     metadata = {
         "name": filename,
