@@ -15,7 +15,7 @@ def get_s3_client():
         aws_secret_access_key=st.secrets["AWS_SECRET_ACCESS_KEY"],
         region_name=st.secrets["AWS_REGION"]
     )
-BUCKET = st.secrets["AWS_BUCKET"]
+
 
 scope = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -94,7 +94,7 @@ def upload_receipt(file, filename):
 
     s3 = get_s3_client()
 
-    bucket = st.secrets["AWS_BUCKET"]
+    bucket = st.secrets.get("AWS_BUCKET")
     key = f"receipts/{filename}"
 
     s3.upload_fileobj(

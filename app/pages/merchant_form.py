@@ -69,10 +69,6 @@ receipt = st.file_uploader(
 
 receipt_link = ""
 
-if receipt:
-    filename = f"{datetime.utcnow().timestamp()}_{receipt.name}"
-    receipt_link = upload_receipt(receipt, filename)
-
 submit = st.button("Submit Charge")
 
 if submit:
@@ -81,6 +77,10 @@ if submit:
     if not valid_guest:
         st.error(guest_result)
         st.stop()
+
+    if receipt:
+        filename = f"{datetime.utcnow().timestamp()}_{receipt.name}"
+        receipt_link = upload_receipt(receipt, filename)
 
     guest_name = guest_result["guest_name"]
     room = guest_result["room"]
