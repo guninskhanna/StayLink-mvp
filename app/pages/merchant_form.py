@@ -4,6 +4,7 @@ from datetime import datetime
 import streamlit as st
 
 st.set_page_config(layout="centered")
+st.write(st.secrets)
 
 hide_streamlit_style = """
 <style>
