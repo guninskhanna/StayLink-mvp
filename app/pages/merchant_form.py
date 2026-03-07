@@ -36,7 +36,12 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 import streamlit as st
-from services.sheets_client import log_transaction, validate_merchant, validate_guest
+from services.sheets_client import (
+    log_transaction,
+    validate_merchant,
+    validate_guest,
+    upload_receipt
+)
 
 st.set_page_config(page_title="StayLink Merchant")
 
@@ -63,12 +68,10 @@ receipt = st.file_uploader(
 )
 
 receipt_link = ""
+
 if receipt:
-    os.makedirs("receipts", exist_ok=True)
-    filename = f"receipts/{datetime.utcnow().timestamp()}_{receipt.name}"
-    with open(filename, "wb") as f:
-        f.write(receipt.getbuffer())
-    receipt_link = filename
+    filename = f"{datetime.utcnow().timestamp()}_{receipt.name}"
+    receipt_link = upload_receipt(receipt, filename)
 
 submit = st.button("Submit Charge")
 
@@ -88,8 +91,6 @@ if submit:
         st.stop()
 
     merchant_name = merchant_result
-
-    receipt_link = filename if receipt else ""
 
     log_transaction(
         token=token,

@@ -3,6 +3,9 @@ from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 import streamlit as st
 from google.oauth2.service_account import Credentials
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaIoBaseUpload
+import io
 
 scope = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -17,7 +20,7 @@ creds = Credentials.from_service_account_info(
 
 
 client = gspread.authorize(creds)
-
+drive_service = build("drive", "v3", credentials=creds)
 sheet = client.open("StayLink_QBS_MVP")
 
 transactions = sheet.worksheet("Transactions")
@@ -76,3 +79,26 @@ def generate_transaction_id():
     records = transactions.get_all_records()
     next_num = len(records) + 1
     return f"TXN-{next_num:06d}"
+
+def upload_receipt(file, filename):
+
+    folder_id = "15vTs0Lgqk8EYRfJ4-Tu8WgzZN4IzBXbl"
+
+    file_stream = io.BytesIO(file.getbuffer())
+
+    media = MediaIoBaseUpload(file_stream, mimetype=file.type)
+
+    metadata = {
+        "name": filename,
+        "parents": [folder_id]
+    }
+
+    uploaded = drive_service.files().create(
+        body=metadata,
+        media_body=media,
+        fields="id"
+    ).execute()
+
+    file_id = uploaded.get("id")
+
+    return f"https://drive.google.com/file/d/{file_id}/view"
