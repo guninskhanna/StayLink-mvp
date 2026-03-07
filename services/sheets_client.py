@@ -96,7 +96,8 @@ def upload_receipt(file, filename):
     uploaded = drive_service.files().create(
         body=metadata,
         media_body=media,
-        fields="id"
+        fields="id",
+        supportsAllDrives=True
     ).execute()
 
     file_id = uploaded.get("id")
