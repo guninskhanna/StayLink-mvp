@@ -6,6 +6,16 @@ from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
 import io
+import boto3
+
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id=st.secrets["AWS_ACCESS_KEY_ID"],
+    aws_secret_access_key=st.secrets["AWS_SECRET_ACCESS_KEY"],
+    region_name=st.secrets["AWS_REGION"]
+)
+
+BUCKET = st.secrets["AWS_BUCKET"]
 
 scope = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -82,28 +92,15 @@ def generate_transaction_id():
 
 def upload_receipt(file, filename):
 
-    folder_id = "15vTs0Lgqk8EYRfJ4-Tu8WgzZN4IzBXbl"
+    key = f"receipts/{filename}"
 
-    file_stream = io.BytesIO(file.read())
-
-    media = MediaIoBaseUpload(
-        file_stream,
-        mimetype=file.type,
-        resumable=False
+    s3.upload_fileobj(
+        file,
+        BUCKET,
+        key,
+        ExtraArgs={
+            "ContentType": file.type
+        }
     )
 
-    metadata = {
-        "name": filename,
-        "parents": [folder_id]
-    }
-
-    uploaded = drive_service.files().create(
-        body=metadata,
-        media_body=media,
-        fields="id",
-        supportsAllDrives=True
-    ).execute()
-
-    file_id = uploaded.get("id")
-
-    return f"https://drive.google.com/file/d/{file_id}/view"
+    return key
