@@ -82,13 +82,7 @@ submit = st.button("Submit Charge")
 
 if submit:
 
-    if receipt:
-        filename = f"{datetime.utcnow().timestamp()}_{receipt.name}"
-        receipt_link = upload_receipt(receipt, filename)
-
-    guest_name = guest_result["guest_name"]
-    room = guest_result["room"]
-
+    # Validate merchant first
     valid_merchant, merchant_result = validate_merchant(pin)
     if not valid_merchant:
         st.error(merchant_result)
@@ -96,6 +90,16 @@ if submit:
 
     merchant_name = merchant_result
 
+    guest_name = guest_result["guest_name"]
+    room = guest_result["room"]
+
+    # Only upload receipt AFTER validation
+    receipt_link = ""
+    if receipt:
+        filename = f"{datetime.utcnow().timestamp()}_{receipt.name}"
+        receipt_link = upload_receipt(receipt, filename)
+
+    # Log transaction
     log_transaction(
         token=token,
         guest_name=guest_name,
