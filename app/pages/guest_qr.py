@@ -58,9 +58,9 @@ if not valid:
     st.stop()
 
 guest_name = guest_result["guest_name"]
-room = guest_result["room"]
+res = guest_result["res_no"]
 
-st.caption(f"Guest: {guest_name} | Room: {room}")
+st.caption(f"Guest: {guest_name} | Reservation Number: {res}")
 
 merchant_url = f"https://staylink-mvp.streamlit.app/merchant_form?token={token}"
 
