@@ -78,7 +78,8 @@ def validate_guest(token):
             if guest["status"] == "ACTIVE":
                 return True, {
                     "guest_name": guest["guest_name"],
-                    "room": guest["room"]
+                    "room": guest["room"],
+                    "res_no": guest["res_no"]
                 }
             else:
                 return False, "Guest stay inactive"
